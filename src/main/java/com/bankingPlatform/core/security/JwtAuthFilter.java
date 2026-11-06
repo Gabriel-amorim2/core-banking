@@ -1,7 +1,9 @@
-package com.bankingPlatform.core.core_security;
+package com.bankingPlatform.core.security;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.exceptions.JWTVerificationException;
+import com.auth0.jwt.interfaces.Claim;
+import com.bankingPlatform.core.common.InvalidTokenSubjectException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -15,6 +17,9 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
+import java.util.Collections;
+import java.util.List;
+import java.util.UUID;
 
 @Component
 public class JwtAuthFilter extends OncePerRequestFilter {
@@ -39,39 +44,42 @@ public class JwtAuthFilter extends OncePerRequestFilter {
 
         try {
             Algorithm algorithm = Algorithm.HMAC256(secret);
-
             var verifier = JWT.require(algorithm)
                     .withIssuer("auth-service")
                     .acceptLeeway(1)
                     .build();
             var decodedToken = verifier.verify(token);
+            String subject = decodedToken.getSubject();
+            if(subject == null || subject.isBlank()) throw new InvalidTokenSubjectException("Token JWT não possui o campo 'sub' (subject) obrigatório.");
 
-            String userId = decodedToken.getSubject(); // pega o "sub"
-            var claim = decodedToken.getClaim("roles").asList(String.class); // pega o "claim"
+            UUID userId = UUID.fromString(subject);
 
+            Claim rolesClaim = decodedToken.getClaim("roles");
+            List<SimpleGrantedAuthority> authorities = Collections.emptyList();
 
-            var authorities = claim.stream()
-                    .map(SimpleGrantedAuthority::new)
-                    .toList();
-
-            if (userId != null && SecurityContextHolder.getContext().getAuthentication() == null) {
-
+            if (!rolesClaim.isNull() && !rolesClaim.isMissing()) {
+                List<String> roleStrings = rolesClaim.asList(String.class);
+                if (roleStrings != null) {
+                    authorities = roleStrings.stream()
+                            .map(SimpleGrantedAuthority::new)
+                            .toList();
+                }
+            }
+            if (SecurityContextHolder.getContext().getAuthentication() == null) {
                 UsernamePasswordAuthenticationToken auth =
                         new UsernamePasswordAuthenticationToken(
-                                userId,  // será acessado no Service via auth.getName()
+                                userId,
                                 null,
-                                authorities // sem roles, pois Account Service não valida papéis
+                                authorities
                         );
-
                 auth.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
-
                 SecurityContextHolder.getContext().setAuthentication(auth);
             }
+
 
         } catch (JWTVerificationException e) {
             System.out.println("Token inválido: " + e.getMessage());
         }
-
         filterChain.doFilter(request, response);
     }
 }

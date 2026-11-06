@@ -1,7 +1,6 @@
 package com.bankingPlatform.core.ledger.model;
 
 import jakarta.persistence.*;
-import lombok.Builder;
 import lombok.Data;
 import org.hibernate.annotations.Immutable;
 

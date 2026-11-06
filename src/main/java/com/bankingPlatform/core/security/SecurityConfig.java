@@ -1,4 +1,4 @@
-package com.bankingPlatform.core.core_security;
+package com.bankingPlatform.core.security;
 
 
 import org.springframework.context.annotation.Bean;

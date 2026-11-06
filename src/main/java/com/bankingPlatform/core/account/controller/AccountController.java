@@ -29,7 +29,6 @@ public class AccountController {
     }
     @DeleteMapping("/delete-account")
     public ResponseEntity<AccountResponse> deleteByCpf(@RequestBody String cpf){
-        System.out.println(cpf);
         var delete = accountService.deleteAccounts();
         return ResponseEntity.status(HttpStatus.OK).body(delete);
     }

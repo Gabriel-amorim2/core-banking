@@ -3,14 +3,16 @@ package com.bankingPlatform.core.account.mapper;
 import com.bankingPlatform.core.account.dto.AccountRequest;
 import com.bankingPlatform.core.account.entity.Account;
 
+import java.math.BigDecimal;
+
 public class AccountMapper {
 
     public static Account mapAccount(AccountRequest dto) {
         if (dto == null) return null;
 
         Account account = new Account();
-        account.setAccountHolderName(dto.getAccountHolderName());
-        account.setBalance(0.0);
+        account.setUserId(dto.getUserId());
+        account.setBalance(BigDecimal.ZERO);
         account.setCpf(dto.getCpf());
         return account;
     }

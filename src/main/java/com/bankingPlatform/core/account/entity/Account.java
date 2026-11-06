@@ -19,8 +19,8 @@ public class Account {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
-    @Column(name = "account_holder_name")
-    private String accountHolderName;
+    @Column(name = "user_id", nullable = false)
+    private UUID userId;
     private String cpf;
     private BigDecimal balance;
     private String username;
