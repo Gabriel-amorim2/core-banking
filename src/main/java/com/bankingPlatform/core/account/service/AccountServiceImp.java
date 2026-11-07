@@ -13,6 +13,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
+import java.util.UUID;
 
 @Service
 public class AccountServiceImp  implements AccountService {
@@ -26,35 +27,30 @@ public class AccountServiceImp  implements AccountService {
 
     @Override
     public AccountResponse createAccount(AccountRequest accountRequest) {
-        if (accountRepository.findByCpf(accountRequest.getCpf()).isPresent()){
-            throw new ExistentAccount("the account with this CPF already exists");
+        if (accountRepository.findByUserId(accountRequest.getUserId()).isPresent()){
+            throw new ExistentAccount("the account with this userId already exists");
         }
-
-
-        String username = getLoggedUsername(); // agora é String
         Account account = AccountMapper.mapAccount(accountRequest);
-        account.setUsername(username);
         accountRepository.save(account);
 
         return AccountResponse.builder().mensage("conta criada")
-                .accountHolderName(account.getAccountHolderName())
+                .userId(account.getUserId())
                 .cpf(account.getCpf())
-                .balance(account.getBalance())
-                .username(account.getUsername()).build();
+                .balance(account.getBalance()).build();
+
 
 
     }
     @Override
     @Transactional
-    public AccountResponse deleteAccounts() {
-        String username = getLoggedUsername();
-        var acccount = accountRepository.findByUsername(username).orElseThrow(() -> new NonExistentAccount("conta não existe para deletar"));
+    public AccountResponse deleteAccounts(UUID userId) {
 
-        accountRepository.deleteByUsername(username);
+        var acccount = accountRepository.findByUserId(userId).orElseThrow(() -> new NonExistentAccount("conta não existe para deletar"));
+
+        accountRepository.deleteByUserId(userId);
 
         return AccountResponse.builder().mensage("Conta deletada")
-                .username(username)
-                .accountHolderName(acccount.getAccountHolderName())
+                .userId(acccount.getUserId())
                 .cpf(acccount.getCpf())
                 .balance(acccount.getBalance())
                 .build();
@@ -62,26 +58,20 @@ public class AccountServiceImp  implements AccountService {
 
 
     @Override
-    public AccountResponse getMyAccounts() {
-        String username = getLoggedUsername();
-        Optional<Account> response =  accountRepository.findByUsername(username);
-        if (!response.isPresent()){
+    public AccountResponse getMyAccounts(UUID userId) {
+        Optional<Account> response =  accountRepository.findByUserId(userId);
+        if (response.isEmpty()){
             throw new NonExistentAccount("conta inexistente");
         }
         var account = response.get();
         return AccountResponse.builder()
                 .mensage("sua conta:")
-                .accountHolderName(account.getAccountHolderName())
+                .userId(account.getUserId())
                 .cpf(account.getCpf())
                 .balance(account.getBalance())
-                .username(account.getUsername()).build();
+                .build();
 
 
-    }
-
-    private String getLoggedUsername() {
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        return auth.getName();
     }
 
 }

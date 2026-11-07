@@ -5,6 +5,7 @@ import lombok.Builder;
 import lombok.Data;
 
 import java.math.BigDecimal;
+import java.util.UUID;
 
 @Data
 @AllArgsConstructor
@@ -12,9 +13,9 @@ import java.math.BigDecimal;
 public class AccountResponse {
 
     private String mensage;
-    private String accountHolderName;
+    private UUID userId;
     private String cpf;
     private BigDecimal balance;
-    private String username;
+
 
 }

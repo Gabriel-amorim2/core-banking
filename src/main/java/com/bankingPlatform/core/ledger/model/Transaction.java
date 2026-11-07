@@ -7,14 +7,14 @@ import java.time.LocalDateTime;
 import java.util.UUID;
 @Entity
 @Data
-@Table(name = "Ledger_transections")
-public class  Transaction {
+@Table(name = "Ledger_transactions")
+public class Transaction {
 
     @Id
     private UUID transactionID;
 
     @Column(unique = true, nullable = false)
-    private String idepotencykey;
+    private String idempotencyKey;
 
     @Enumerated(EnumType.STRING)
     @Column(updatable = false)

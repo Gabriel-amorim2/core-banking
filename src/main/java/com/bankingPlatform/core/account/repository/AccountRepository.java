@@ -15,9 +15,7 @@ public interface AccountRepository extends JpaRepository<Account,UUID> {
     @Lock(LockModeType.PESSIMISTIC_WRITE)
     @Query("SELECT a FROM Account a WHERE a.id IN :ids")
     List<Account> findAllByIdForUpdate(@Param("ids") List<UUID> id);
-
-    Optional<Account> findByUsername(String userId);
-    Optional<Account> findByCpf(String cpf);
-    void deleteByUsername(String cpf);
+    Optional<Account> findByUserId(UUID userId);
+    void deleteByUserId(UUID userId);
 
 }

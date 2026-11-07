@@ -12,9 +12,6 @@ import java.util.UUID;
 @Setter
 public class AccountRequest {
     private UUID userId;
-    @NotBlank
-    @Pattern(regexp = "\\d{3}\\.\\d{3}\\.\\d{3}-\\d{2}"
-            , message = "formato do CPF invalido")
-    private String cpf;
+
 }
 

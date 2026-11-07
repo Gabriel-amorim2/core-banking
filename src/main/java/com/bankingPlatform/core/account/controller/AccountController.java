@@ -11,6 +11,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.UUID;
+
 @RestController
 @RequestMapping("/accounts")
 public class AccountController {
@@ -28,14 +30,14 @@ public class AccountController {
         return ResponseEntity.status(HttpStatus.CREATED).body(count);
     }
     @DeleteMapping("/delete-account")
-    public ResponseEntity<AccountResponse> deleteByCpf(@RequestBody String cpf){
-        var delete = accountService.deleteAccounts();
+    public ResponseEntity<AccountResponse> deleteByCpf(@RequestBody UUID userId){
+        var delete = accountService.deleteAccounts(userId);
         return ResponseEntity.status(HttpStatus.OK).body(delete);
     }
 
     @GetMapping("/get-account")
-    public ResponseEntity<AccountResponse> getAccount (){
-        var account = accountService.getMyAccounts();
+    public ResponseEntity<AccountResponse> getAccount (UUID userId){
+        var account = accountService.getMyAccounts(userId);
         return ResponseEntity.status(HttpStatus.OK).body(account);
     }
 }

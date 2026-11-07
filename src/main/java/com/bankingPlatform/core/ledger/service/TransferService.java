@@ -29,7 +29,7 @@ public class TransferService {
 
 
     @Transactional
-    public void transfer(UUID from, UUID to, String type, BigDecimal amount, String idepotecyKey){
+    public void transfer(UUID from, UUID to, String type, BigDecimal amount, String idempotencyKey){
 
 
         List<UUID> ids = Stream.of(from, to)
@@ -55,7 +55,7 @@ public class TransferService {
         Transaction transaction = new Transaction();
         transaction.setTransactionID(UUID.randomUUID());
         transaction.setType(TransactionType.valueOf(type));
-        transaction.setIdepotencykey(idepotecyKey);
+        transaction.setIdempotencyKey(idempotencyKey);
         transaction.setCreatedAt(LocalDateTime.now());
         transaction.setStatus(TransactionStatus.PENDING);
 
