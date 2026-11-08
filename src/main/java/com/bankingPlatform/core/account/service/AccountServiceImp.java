@@ -8,8 +8,6 @@ import com.bankingPlatform.core.account.infra.exepition.NonExistentAccount;
 import com.bankingPlatform.core.account.mapper.AccountMapper;
 import com.bankingPlatform.core.account.repository.AccountRepository;
 import jakarta.transaction.Transactional;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -33,11 +31,9 @@ public class AccountServiceImp  implements AccountService {
         Account account = AccountMapper.mapAccount(accountRequest);
         accountRepository.save(account);
 
-        return AccountResponse.builder().mensage("conta criada")
+        return AccountResponse.builder().message("conta criada")
                 .userId(account.getUserId())
-                .cpf(account.getCpf())
                 .balance(account.getBalance()).build();
-
 
 
     }
@@ -49,9 +45,8 @@ public class AccountServiceImp  implements AccountService {
 
         accountRepository.deleteByUserId(userId);
 
-        return AccountResponse.builder().mensage("Conta deletada")
+        return AccountResponse.builder().message("Conta deletada")
                 .userId(acccount.getUserId())
-                .cpf(acccount.getCpf())
                 .balance(acccount.getBalance())
                 .build();
     }
@@ -65,9 +60,8 @@ public class AccountServiceImp  implements AccountService {
         }
         var account = response.get();
         return AccountResponse.builder()
-                .mensage("sua conta:")
+                .message("sua conta:")
                 .userId(account.getUserId())
-                .cpf(account.getCpf())
                 .balance(account.getBalance())
                 .build();
 

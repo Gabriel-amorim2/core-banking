@@ -12,9 +12,8 @@ import java.util.UUID;
 @Builder
 public class AccountResponse {
 
-    private String mensage;
+    private String message;
     private UUID userId;
-    private String cpf;
     private BigDecimal balance;
 
 

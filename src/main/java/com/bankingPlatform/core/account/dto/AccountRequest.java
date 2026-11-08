@@ -12,6 +12,5 @@ import java.util.UUID;
 @Setter
 public class AccountRequest {
     private UUID userId;
-
 }
 

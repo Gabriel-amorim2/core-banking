@@ -21,8 +21,6 @@ public class Account {
     private UUID id;
     @Column(name = "user_id", nullable = false)
     private UUID userId;
-    @Column(unique = true, nullable = false)
-    private String cpf;
     @Column(nullable = false)
     private String currency;
     @Column(nullable = false)

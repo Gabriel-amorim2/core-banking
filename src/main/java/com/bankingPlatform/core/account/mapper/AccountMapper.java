@@ -13,7 +13,7 @@ public class AccountMapper {
         Account account = new Account();
         account.setUserId(dto.getUserId());
         account.setBalance(BigDecimal.ZERO);
-        account.setCpf(dto.getCpf());
+
         return account;
     }
 
